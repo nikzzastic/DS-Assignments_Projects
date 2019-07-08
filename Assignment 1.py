@@ -1,19 +1,21 @@
 
 #1. Case study 1: Abalone age prediction 
 
+'''
 Abalone is a species (of tortoise like animal) which is find nearby waterbodies such as lakes, river or ocean. 
 In this dataset abalone physical body measurement are mentioned. In the dataset one of the feature ring is given mean age can
 be predicted by counting total number of rings on the body. One has to predict the age of the abalone animal. Here number of 
 rings attribute (column) can be considered as age,as the number of rings is the age.Suppose number of rings on the body of 
 species is 4 hence age is 4; if rings are 2 the age is 2. In this dataset you have to predict the age. 
 Study the details of the case study on UCI repository https://archive.ics.uci.edu/ml/datasets/abalone
+'''
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import sklearn
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error,accuracy_score,confusion_matrix,classification_report
+from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 file = pd.read_csv('abalone.csv',header=None,names=['Gender','Length','Diameter','Height','Whole Weight','Shucked Weight (Meat Weight)','Viscera Weight (After Bleeding)','Shell weight','Rings'])
