@@ -22,6 +22,9 @@ file = pd.read_csv('abalone.csv',header=None,names=['Gender','Length','Diameter'
 
 print(file.head())
 
+#To find if any null value exists
+print(file.isnull().sum())
+
 file['Gender'].unique()
 #Sex is either Male ("M"), Female ("F") or Infant ("I"),not suitable for regression algorithms, so we create a binary/boolean feature for each of the 3 options:
 
