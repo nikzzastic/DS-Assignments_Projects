@@ -23,7 +23,7 @@ x = data.iloc[:,0:-1]
 y= data.iloc[:,-1]
 x.head()
 
-x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.22,random_state=39)
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.22,random_state=54)
 
 print(x_train.shape) # (803, 8)
 print(x_test.shape) # (227, 8)
@@ -31,20 +31,20 @@ print(x_test.shape) # (227, 8)
 lr = LinearRegression()
 lr.fit(x_train,y_train)
 
-print(lr.score(x_train,y_train)) # 0.6314486028772601
+print(lr.score(x_train,y_train)) # 0.6363403047514257
 
 ls = Lasso()
 ls.fit(x_train,y_train)
-print(ls.score(x_train,y_train)) # 0.6312422638786822
+print(ls.score(x_train,y_train)) # 0.6361180676320122
 
 rd = Ridge()
 rd.fit(x_train,y_train)
-print(rd.score(x_train,y_train)) # 0.6314486028431515
+print(rd.score(x_train,y_train)) # 0.6363403047015143
 
 from sklearn.svm import SVR
 re = SVR(kernel='linear')
 re.fit(x_train,y_train)
-print(re.score(x_train,y_train)) # 0.5800858827699276
+print(re.score(x_train,y_train)) # 0.6051685990293949
 
 re2 = SVR(kernel='poly')
 re2.fit(x_train,y_train)
@@ -52,13 +52,13 @@ print(re2.score(x_train,y_train))
 
 re3 = SVR(kernel='rbf')
 re3.fit(x_train,y_train)
-print(re3.score(x_train,y_train)) # 0.114935717860293
+print(re3.score(x_train,y_train)) # 0.11620123115011083
 
 from sklearn.ensemble import RandomForestRegressor
 rfr = RandomForestRegressor()
 
 rfr.fit(x_train,y_train)
-print(rfr.score(x_train,y_train)) # 0.9772550347123613
+print(rfr.score(x_train,y_train)) # 0.983528661736117
 
 
 import pickle
@@ -71,4 +71,4 @@ model = pickle.load(fl)
 fl.close()
 
 result = model.score(x_train,y_train)
-print(result) # 0.9772550347123613
+print(result) # 0.983528661736117
