@@ -13,48 +13,87 @@ Study the details of the case study on UCI repository https://archive.ics.uci.ed
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import sklearn
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import accuracy_score,confusion_matrix,classification_report,mean_squared_error
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 
-file = pd.read_csv('abalone.csv',header=None,names=['Gender','Length','Diameter','Height','Whole Weight','Shucked Weight (Meat Weight)','Viscera Weight (After Bleeding)','Shell weight','Rings'])
+data = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data',names=['Gender','Length','Diameter','Height','Whole Weight','Shucked Weight (Meat Weight)','Viscera Weight (After Bleeding)','Shell weight','Rings'])
+data.head()
 
-print(file.head())
+print(data.isnull().sum()) # o find if there's any null value
 
-#To find if any null value exists
-print(file.isnull().sum())
+x = data.iloc[:,1:-1]
+x.head()
 
-file['Gender'].unique()
-#Sex is either Male ("M"), Female ("F") or Infant ("I"),not suitable for regression algorithms, so we create a binary/boolean feature for each of the 3 options:
+y = data.iloc[:,-1]
+y.head()
 
-for label in "MFI":
-    file[label] = file["Gender"] == label
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.23,random_state=54)
 
-x = file.iloc[:,[1,2,3,4,5,6,7,9,10,11]]
-print(x.head())
-
-y = file.loc[:,'Rings']
-y = y.astype('float')
-print(y.head())
-
-x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=.20,random_state=43)
-
-print(x_train.shape) # (3341, 10)
-print(x_test.shape) # (836, 10)
-
+print(x_train.shape) #(3216, 7)
+print(y_train.shape) #(3216,)
+print(x_test.shape) #(961, 7)
 
 lr = LinearRegression()
-lr.coef_
-
 lr.fit(x_train,y_train)
-print(lr.score(x_train,y_train))  # 0.5289026155660249
+print(lr.score(x_train,y_train)) # 0.5390517381766043
 
-pred = lr.predict(x_test)
-print('Predicted -> ',pred)
-print('\nActual -> ',y_test)
+from sklearn.linear_model import Lasso,Ridge
+ls = Lasso()
+rd = Ridge()
+
+ls.fit(x_train,y_train)
+print(ls.score(x_train,y_train)) 
+
+rd.fit(x_train,y_train)
+print(rd.score(x_train,y_train)) # 0.535365967205986
+
+from sklearn.svm import SVR
+
+list=['linear','poly','rbf']
+for i in list:
+    sv=SVR(kernel=i)
+    sv.fit(x_train,y_train)
+    print(i +"->",sv.score(x_train,y_train))  
+
+#linear-> 0.48585546928630163
+#poly-> 0.24050245588115038
+#rbf-> 0.43976457504841804
+
+from sklearn.ensemble import RandomForestRegressor,AdaBoostRegressor
+rfr = RandomForestRegressor()
+
+rfr.fit(x_train,y_train)
+print(rfr.score(x_train,y_train)) # 0.9177588612281609
+
+ada=AdaBoostRegressor()
+ada.fit(x_train,y_train)
+print(ada.score(x_train,y_train)) # 0.2248556229614953
+
+z = RandomForestRegressor(n_estimators=500,random_state=52)
+z.fit(x_train,y_train)
+z.score(x_train,y_train) # 0.9400800885518706 (One with best accuracy till now)
+
+pred = z.predict(x_test)
+print('Predicted ',pred)
+print('Actual ',y_test)
 
 error = mean_squared_error(pred,y_test)
-print(error)  # 4.084093586700131
+print(error)
 
-plt.scatter(pred,y_test)
+plt.scatter(pred,y_test) # Visualizing the data got.
+
+# Now saving the model
+import pickle
+fh = open('ab_train.obj','wb')
+pickle.dump(z,fh)
+fh.close()
+
+#Opening the saved model
+
+file_op = open('ab_train.ob','rb')
+ob_file = pickle.load(file_op)
+file_op.close()
+
+result = ob_file.score(x_train,y_train)
+print(result) # 0.9400800885518706
