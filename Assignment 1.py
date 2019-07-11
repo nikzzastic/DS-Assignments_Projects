@@ -22,7 +22,12 @@ data.head()
 
 print(data.isnull().sum()) # o find if there's any null value
 
-x = data.iloc[:,1:-1]
+# Making all data in same format
+from sklearn.preprocessing import LabelEncoder
+lbl = LabelEncoder()
+data['Gender']=lbl.fit_transform(data['Gender'])
+
+x = data.iloc[:,0:-1]
 x.head()
 
 y = data.iloc[:,-1]
@@ -36,7 +41,7 @@ print(x_test.shape) #(961, 7)
 
 lr = LinearRegression()
 lr.fit(x_train,y_train)
-print(lr.score(x_train,y_train)) # 0.5390517381766043
+print(lr.score(x_train,y_train)) # 0.5394496252265788
 
 from sklearn.linear_model import Lasso,Ridge
 ls = Lasso()
@@ -46,7 +51,7 @@ ls.fit(x_train,y_train)
 print(ls.score(x_train,y_train)) 
 
 rd.fit(x_train,y_train)
-print(rd.score(x_train,y_train)) # 0.535365967205986
+print(rd.score(x_train,y_train)) # 0.5357349855817581
 
 from sklearn.svm import SVR
 
@@ -56,30 +61,30 @@ for i in list:
     sv.fit(x_train,y_train)
     print(i +"->",sv.score(x_train,y_train))  
 
-#linear-> 0.48585546928630163
-#poly-> 0.24050245588115038
-#rbf-> 0.43976457504841804
+#linear-> 0.4854197431325158
+#poly-> 0.2563368744394211
+#rbf-> 0.43880924241218155
 
 from sklearn.ensemble import RandomForestRegressor,AdaBoostRegressor
 rfr = RandomForestRegressor()
 
 rfr.fit(x_train,y_train)
-print(rfr.score(x_train,y_train)) # 0.9177588612281609
+print(rfr.score(x_train,y_train)) # 0.9138163598357825
 
 ada=AdaBoostRegressor()
 ada.fit(x_train,y_train)
-print(ada.score(x_train,y_train)) # 0.2248556229614953
+print(ada.score(x_train,y_train)) # 0.22679435762829303
 
 z = RandomForestRegressor(n_estimators=500,random_state=52)
 z.fit(x_train,y_train)
-z.score(x_train,y_train) # 0.9400800885518706 (One with best accuracy till now)
+z.score(x_train,y_train) # 0.9412253384632121 (One with best accuracy till now)
 
 pred = z.predict(x_test)
 print('Predicted ',pred)
 print('Actual ',y_test)
 
 error = mean_squared_error(pred,y_test)
-print(error)
+print(error) # 4.959333789802289
 
 plt.scatter(pred,y_test) # Visualizing the data got.
 
@@ -91,9 +96,9 @@ fh.close()
 
 #Opening the saved model
 
-file_op = open('ab_train.ob','rb')
+file_op = open('ab_train.obj','rb')
 ob_file = pickle.load(file_op)
 file_op.close()
 
 result = ob_file.score(x_train,y_train)
-print(result) # 0.9400800885518706
+print(result) # 0.9412253384632121
