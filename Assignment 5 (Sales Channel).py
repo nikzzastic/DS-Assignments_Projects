@@ -1,5 +1,5 @@
+# Sales Channel Prediction Case Study 
 '''
-Sales Channel Prediction Case Study 
 When a company enters a market, the distribution strategy and channel it uses are keys to its success in the market, as well 
 as market know-how and customer knowledge and understanding. Because an effective distribution strategy under efficient supply-chain 
 management opens doors for attaining competitive advantage and strong brand equity in the market, it is a component of the marketing mix 
